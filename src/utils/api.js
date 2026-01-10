@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 
 const API_BASE = 'https://bd-backend.up.railway.app/api';
 
@@ -65,6 +64,7 @@ export const api = {
   },
   items: {
     getByCategory: (categoryId) => fetchAPI(`/items/category/${categoryId}`),
+    getUncategorized: () => fetchAPI('/items/uncategorized'),
     add: (data) => fetchAPI('/items', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -83,6 +83,10 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ name }),
     }),
+    delete: (id) => fetchAPI(`/guests/${id}`, {
+      method: 'DELETE',
+    }),
+    getTotal: (id) => fetchAPI(`/guests/${id}/total`),
   },
   import: {
     data: (categories) => fetchAPI('/import', {

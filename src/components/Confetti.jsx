@@ -1,9 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 
 export function Confetti() {
   const canvasRef = useRef(null);
-  const { t } = useLanguage();
 
   useEffect(() => {
     const canvas = canvasRef.current;

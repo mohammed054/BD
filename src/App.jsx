@@ -4,6 +4,7 @@ import { UserProvider } from './contexts/UserContext';
 import Header from './components/Header';
 import CategoryList from './components/CategoryList';
 import GuestList from './components/GuestList';
+import UncategorizedItems from './components/UncategorizedItems';
 import ImportPanel from './components/ImportPanel';
 import ConnectionStatus from './components/ConnectionStatus';
 import './App.css';
@@ -24,6 +25,7 @@ function App() {
             </div>
 
             <div className="right-panel">
+              <UncategorizedItems />
               <CategoryList />
             </div>
           </div>

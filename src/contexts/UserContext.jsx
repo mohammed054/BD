@@ -5,6 +5,7 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
   const [userName, setUserName] = useState('');
   const [isRegistered, setIsRegistered] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     const savedName = localStorage.getItem('bd-username');
@@ -21,7 +22,7 @@ export function UserProvider({ children }) {
   };
 
   return (
-    <UserContext.Provider value={{ userName, isRegistered, register }}>
+    <UserContext.Provider value={{ userName, isRegistered, register, editMode, setEditMode }}>
       {children}
     </UserContext.Provider>
   );

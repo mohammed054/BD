@@ -7,7 +7,7 @@ export default function ConnectionStatus() {
     <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
       <span className="status-dot"></span>
       <span className="status-text">
-        {isConnected ? 'Cloud Sync Active' : 'Cloud Sync Offline'}
+        {isConnected ? '☁️ Cloud Sync Active' : '⚠️ Cloud Sync Offline'}
       </span>
       {lastChecked && (
         <span className="last-checked">
