@@ -5,7 +5,7 @@ const LanguageContext = createContext();
 export const translations = {
   en: {
     title: 'Mohammed & Ahmad BD',
-    subtitle: 'Camping & Party Organizer',
+    subtitle: '& Party Organizer',
     countdown: 'Countdown to Celebration',
     guests: 'Guests',
     addGuest: 'Join the Party!',
