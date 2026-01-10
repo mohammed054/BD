@@ -1,4 +1,31 @@
+import { useState, useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
+
 const API_BASE = 'https://bd-backend.up.railway.app/api';
+
+export function useConnectionStatus() {
+  const [isConnected, setIsConnected] = useState(true);
+  const [lastChecked, setLastChecked] = useState(null);
+
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/health`);
+        setIsConnected(response.ok);
+        setLastChecked(new Date());
+      } catch {
+        setIsConnected(false);
+        setLastChecked(new Date());
+      }
+    };
+
+    checkConnection();
+    const interval = setInterval(checkConnection, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return { isConnected, lastChecked };
+}
 
 export async function fetchAPI(endpoint, options = {}) {
   try {

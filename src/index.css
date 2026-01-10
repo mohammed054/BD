@@ -772,3 +772,63 @@ body {
     transform: translateY(-10px);
   }
 }
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border-bottom: 3px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.connection-status.connected {
+  border-bottom-color: var(--accent-success);
+}
+
+.connection-status.disconnected {
+  border-bottom-color: var(--accent-primary);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-success);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.connection-status.disconnected .status-dot {
+  background: var(--accent-primary);
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px var(--accent-success);
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 5px var(--accent-success);
+  }
+}
+
+.status-text {
+  font-weight: bold;
+}
+
+.connection-status.connected .status-text {
+  color: var(--accent-success);
+}
+
+.connection-status.disconnected .status-text {
+  color: var(--accent-primary);
+}
+
+.last-checked {
+  margin-left: auto;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}

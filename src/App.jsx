@@ -5,6 +5,7 @@ import Header from './components/Header';
 import CategoryList from './components/CategoryList';
 import GuestList from './components/GuestList';
 import ImportPanel from './components/ImportPanel';
+import ConnectionStatus from './components/ConnectionStatus';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     <LanguageProvider>
       <UserProvider>
         <div className="app">
+          <ConnectionStatus />
           <Header />
 
           <div className="main-content">
