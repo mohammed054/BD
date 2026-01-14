@@ -45,10 +45,14 @@ const handleImport = async () => {
       const payload = {};
       if (categories && Array.isArray(categories) && categories.length > 0) {
         payload.categories = categories;
+        console.log('Sending categories:', categories.length);
       }
       if (uncategorizedItems && Array.isArray(uncategorizedItems) && uncategorizedItems.length > 0) {
         payload.uncategorizedItems = uncategorizedItems;
+        console.log('Sending uncategorizedItems:', uncategorizedItems.length);
       }
+      
+      console.log('Final payload:', JSON.stringify(payload).substring(0, 200));
       
       if (Object.keys(payload).length === 0) {
         setImportResult({ error: 'Must have non-empty categories or items' });
