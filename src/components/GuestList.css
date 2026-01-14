@@ -250,7 +250,9 @@
   justify-content: center;
   align-items: center;
   padding: var(--spacing-md);
-  animation: modalFadeIn 0.3s steps(4) ease;
+  animation: modalFadeIn 0.15s ease;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 @keyframes modalFadeIn {
@@ -273,10 +275,12 @@
   box-shadow: 
     0 25px 80px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  animation: modalSlideUp 0.3s steps(4) ease;
+  animation: modalSlideUp 0.15s ease;
   display: flex;
   flex-direction: column;
   image-rendering: pixelated;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 @keyframes modalSlideUp {
@@ -524,8 +528,8 @@
 
 @media (max-width: 480px) {
   .guest-section {
-    padding: var(--spacing-lg);
-    border-width: 3px;
+    padding: var(--spacing-md);
+    border-width: 2px;
   }
 
   .guest-header {

@@ -51,7 +51,7 @@ export default function Category({ category, editMode, onDelete }) {
     try {
       if (item.claimed && item.claimed_by === userName) {
         await api.items.claim(item.id, false, null);
-      } else if (!item.claimed) {
+      } else {
         await api.items.claim(item.id, true, userName);
       }
       fetchItems();
@@ -209,21 +209,21 @@ export default function Category({ category, editMode, onDelete }) {
                      </span>
                    )}
                  </div>
-                 <div className="item-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  {item.claimed && (
-                     <span className="claimed-by">
-                       Claimed by {item.claimed_by}
-                     </span>
-                   )}
-                   <button
-                     className={`claim-btn ${item.claimed ? 'claimed' : ''}`}
-                     onClick={() => handleClaim(item)}
-                     disabled={item.claimed && item.claimed_by !== userName}
-                     style={{ minWidth: '120px', minHeight: '44px', fontSize: '1rem', padding: '0 1rem' }}
-                     title={item.claimed && item.claimed_by === userName ? 'Click to unclaim' : item.claimed ? `Claimed by ${item.claimed_by}` : 'Click to claim'}
-                   >
-                     {item.claimed ? (item.claimed_by === userName ? '🔄 Unclaim' : `🔒 ${item.claimed_by}`) : '🤝 Claim'}
-                   </button>
+<div className="item-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                   {item.claimed && (
+                      <span className="claimed-by" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                        {item.claimed_by.length > 10 ? `${item.claimed_by.substring(0, 10)}...` : item.claimed_by}
+                      </span>
+                    )}
+                    <button
+                      className={`claim-btn ${item.claimed ? 'claimed' : ''}`}
+                      onClick={() => handleClaim(item)}
+                      disabled={item.claimed && item.claimed_by !== userName}
+                      style={{ minWidth: '100px', minHeight: '40px', fontSize: '0.9rem', padding: '0 0.75rem' }}
+                      title={item.claimed && item.claimed_by === userName ? 'Click to unclaim' : item.claimed ? `Claimed by ${item.claimed_by}` : 'Click to claim'}
+                    >
+                      {item.claimed ? (item.claimed_by === userName ? '🔄 Unclaim' : `🔒`) : '🤝 Claim'}
+                    </button>
                    {editMode && (
                      <button
                        className="delete-item-btn"

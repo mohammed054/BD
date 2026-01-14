@@ -68,6 +68,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 #root {
