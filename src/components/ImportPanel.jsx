@@ -17,25 +17,23 @@ const handleImport = async () => {
       
       const parsed = JSON.parse(importData);
       
-      // Validate structure before sending
-      if (!parsed.categories && !parsed.uncategorizedItems) {
-        setImportResult({ error: 'Must include either "categories" or "uncategorizedItems"' });
+      // Build clean payload - only include fields that exist and have content
+      const payload = {};
+      if (parsed.categories && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
+        payload.categories = parsed.categories;
+      }
+      if (parsed.uncategorizedItems && Array.isArray(parsed.uncategorizedItems) && parsed.uncategorizedItems.length > 0) {
+        payload.uncategorizedItems = parsed.uncategorizedItems;
+      }
+      
+      if (Object.keys(payload).length === 0) {
+        setImportResult({ error: 'JSON must include non-empty "categories" or "uncategorizedItems"' });
         return;
       }
       
-      if (parsed.categories && !Array.isArray(parsed.categories)) {
-        setImportResult({ error: '"categories" must be an array' });
-        return;
-      }
-      
-      if (parsed.uncategorizedItems && !Array.isArray(parsed.uncategorizedItems)) {
-        setImportResult({ error: '"uncategorizedItems" must be an array' });
-        return;
-      }
-      
-      const result = await api.import.data(parsed);
+      const result = await api.import.data(payload);
       setImportResult(result);
-      setImportData(''); // Clear after successful import
+      setImportData('');
     } catch (error) {
       setImportResult({ error: error.message });
     }
