@@ -192,26 +192,28 @@ export default function UncategorizedItems() {
                    </span>
                  )}
                </div>
-              <div className="item-actions">
-                {item.claimed && (
-                  <span className="claimed-by">
-                    ✓ {item.claimed_by}
-                  </span>
-                )}
-                <button
-                  className={`claim-btn ${item.claimed ? 'claimed' : ''}`}
-                  onClick={() => handleClaim(item)}
-                  disabled={item.claimed && item.claimed_by !== userName}
-                >
-                  {item.claimed ? '✓' : '🤝'}
-                </button>
-                <button
-                  className="delete-item-btn"
-                  onClick={() => handleDeleteItem(item.id)}
-                >
-                  ✕
-                </button>
-              </div>
+               <div className="item-actions">
+                 {item.claimed && (
+                   <span className="claimed-by">
+                     Claimed by {item.claimed_by}
+                   </span>
+                 )}
+                 <button
+                   className={`claim-btn ${item.claimed ? 'claimed' : ''}`}
+                   onClick={() => handleClaim(item)}
+                   disabled={item.claimed && item.claimed_by !== userName}
+                   style={{ minWidth: '120px', minHeight: '44px', fontSize: '1rem', padding: '0 1rem' }}
+                   title={item.claimed && item.claimed_by === userName ? 'Click to unclaim' : item.claimed ? `Claimed by ${item.claimed_by}` : 'Click to claim'}
+                 >
+                   {item.claimed ? (item.claimed_by === userName ? '🔄 Unclaim' : `🔒 ${item.claimed_by}`) : '🤝 Claim'}
+                 </button>
+                 <button
+                   className="delete-item-btn"
+                   onClick={() => handleDeleteItem(item.id)}
+                 >
+                   ✕
+                 </button>
+               </div>
             </div>
           ))
         )}

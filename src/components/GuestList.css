@@ -371,6 +371,20 @@
   animation: float 3s ease-in-out infinite;
 }
 
+.loading-spinner {
+  font-size: 4rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
@@ -392,7 +406,9 @@
   position: relative;
   overflow: hidden;
   gap: var(--spacing-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .guest-item-preview::before {
@@ -401,17 +417,17 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 3px;
-  background: var(--accent-success);
+  width: 4px;
+  background: linear-gradient(180deg, var(--accent-success) 0%, #00b894 100%);
   transform: scaleY(0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0, 0.2, 1);
 }
 
 .guest-item-preview:hover {
   border-color: var(--accent-success);
-  transform: translateX(5px) scale(1.01);
+  transform: translateX(5px) scale(1.02);
   box-shadow: 
-    0 4px 12px rgba(34, 197, 94, 0.3),
+    0 6px 20px rgba(34, 197, 94, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -426,11 +442,28 @@
 
 .item-name {
   font-size: var(--font-size-lg);
-  font-weight: 500;
+  font-weight: bold;
   color: var(--text-primary);
   font-family: 'Courier New', monospace;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.item-name::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-success);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0, 0.2, 1);
+}
+
+.guest-item-preview:hover .item-name::after {
+  width: 100%;
 }
 
 .item-price-wrapper {
@@ -444,11 +477,16 @@
   font-weight: bold;
   color: var(--accent-secondary);
   font-family: 'Courier New', monospace;
-  text-shadow: 1px 1px 0 var(--accent-primary);
-  background: linear-gradient(135deg, rgba(244, 114, 182, 0.2) 0%, rgba(233, 69, 96, 0.2) 100%);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-md);
-  border: 2px solid var(--accent-secondary);
+  text-shadow: 2px 2px 0 var(--accent-primary);
+  background: linear-gradient(135deg, rgba(244, 114, 182, 0.3) 0%, rgba(233, 69, 96, 0.3) 100%);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  border: 3px solid var(--accent-secondary);
+  box-shadow: 
+    0 2px 8px rgba(196, 76, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  min-width: 80px;
+  text-align: center;
 }
 
 .guest-total-summary {

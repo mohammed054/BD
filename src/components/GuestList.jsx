@@ -18,6 +18,7 @@ export default function GuestList() {
   const [guestTotals, setGuestTotals] = useState({});
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [guestItems, setGuestItems] = useState([]);
+  const [loadingItems, setLoadingItems] = useState(false);
 
   useEffect(() => {
     const fetchGuestTotals = async () => {
@@ -45,6 +46,10 @@ export default function GuestList() {
   };
 
   const handleGuestClick = async (guest) => {
+    setLoadingItems(true);
+    setSelectedGuest(guest);
+    setGuestItems([]);
+    
     try {
       const [categoriesData, itemsData] = await Promise.all([
         api.categories.getAll(),
@@ -52,16 +57,22 @@ export default function GuestList() {
       ]);
 
       const claimedItems = itemsData.filter(item => item.claimed && item.claimed_by === guest.name);
-      for (const cat of categoriesData) {
-        const catItems = await api.items.getByCategory(cat.id);
+      
+      const categoryItemsPromises = categoriesData.map(cat => 
+        api.items.getByCategory(cat.id)
+      );
+      const allCategoryItems = await Promise.all(categoryItemsPromises);
+      
+      allCategoryItems.forEach(catItems => {
         const claimedCatItems = catItems.filter(item => item.claimed && item.claimed_by === guest.name);
         claimedItems.push(...claimedCatItems);
-      }
+      });
 
       setGuestItems(claimedItems);
-      setSelectedGuest(guest);
     } catch (error) {
       console.error('Failed to fetch guest items:', error);
+    } finally {
+      setLoadingItems(false);
     }
   };
 
@@ -116,7 +127,12 @@ export default function GuestList() {
               </button>
             </div>
 
-            {guestItems.length === 0 ? (
+            {loadingItems ? (
+              <div className="empty-state">
+                <div className="loading-spinner">⏳</div>
+                <p>Loading items...</p>
+              </div>
+            ) : guestItems.length === 0 ? (
               <div className="empty-state">
                 <div className="empty-emoji">🎈</div>
                 <p>No items claimed yet</p>
