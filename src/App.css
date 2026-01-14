@@ -654,6 +654,27 @@ html {
   transform: scaleY(1);
 }
 
+.category.fully-claimed {
+  position: relative;
+}
+
+.category.fully-claimed::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(107, 203, 119, 0.3);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.category.fully-claimed > * {
+  position: relative;
+  z-index: 2;
+}
+
 .category-header {
   display: flex;
   justify-content: space-between;

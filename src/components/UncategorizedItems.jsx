@@ -68,6 +68,15 @@ export default function UncategorizedItems() {
     }
   };
 
+  const handleDuplicateItem = async (itemId) => {
+    try {
+      await api.items.duplicate(itemId);
+      fetchItems();
+    } catch (error) {
+      console.error('Failed to duplicate item:', error);
+    }
+  };
+
   const handleUpdatePrice = async (itemId) => {
     try {
       await api.items.updatePrice(itemId, parseFloat(priceInput) || 0);
@@ -193,27 +202,35 @@ export default function UncategorizedItems() {
                  )}
                </div>
 <div className="item-actions">
-                  {item.claimed && (
-                    <span className="claimed-by" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
-                      {item.claimed_by.length > 10 ? `${item.claimed_by.substring(0, 10)}...` : item.claimed_by}
-                    </span>
-                  )}
+                   {item.claimed && (
+                     <span className="claimed-by" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                       {item.claimed_by.length > 10 ? `${item.claimed_by.substring(0, 10)}...` : item.claimed_by}
+                     </span>
+                   )}
+                   <button
+                     className={`claim-btn ${item.claimed ? 'claimed' : ''}`}
+                     onClick={() => handleClaim(item)}
+                     disabled={item.claimed && item.claimed_by !== userName}
+                     style={{ minWidth: '100px', minHeight: '40px', fontSize: '0.9rem', padding: '0 0.75rem' }}
+                     title={item.claimed && item.claimed_by === userName ? 'Click to unclaim' : item.claimed ? `Claimed by ${item.claimed_by}` : 'Click to claim'}
+                   >
+                     {item.claimed ? (item.claimed_by === userName ? '🔄 Unclaim' : `🔒`) : '🤝 Claim'}
+                   </button>
                   <button
-                    className={`claim-btn ${item.claimed ? 'claimed' : ''}`}
-                    onClick={() => handleClaim(item)}
-                    disabled={item.claimed && item.claimed_by !== userName}
-                    style={{ minWidth: '100px', minHeight: '40px', fontSize: '0.9rem', padding: '0 0.75rem' }}
-                    title={item.claimed && item.claimed_by === userName ? 'Click to unclaim' : item.claimed ? `Claimed by ${item.claimed_by}` : 'Click to claim'}
+                    className="action-btn"
+                    onClick={() => handleDuplicateItem(item.id)}
+                    style={{ minWidth: '40px', minHeight: '44px', fontSize: '1.2rem' }}
+                    title="Duplicate item"
                   >
-                    {item.claimed ? (item.claimed_by === userName ? '🔄 Unclaim' : `🔒`) : '🤝 Claim'}
+                    📋
                   </button>
-                 <button
-                   className="delete-item-btn"
-                   onClick={() => handleDeleteItem(item.id)}
-                 >
-                   ✕
-                 </button>
-               </div>
+                  <button
+                    className="delete-item-btn"
+                    onClick={() => handleDeleteItem(item.id)}
+                  >
+                    ✕
+                  </button>
+                </div>
             </div>
           ))
         )}

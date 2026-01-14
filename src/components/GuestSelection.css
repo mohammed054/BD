@@ -139,6 +139,8 @@
   font-family: 'Courier New', monospace;
   text-transform: uppercase;
   letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .guest-selection-arrow {

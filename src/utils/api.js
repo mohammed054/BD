@@ -69,6 +69,9 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+    duplicate: (id) => fetchAPI(`/items/${id}/duplicate`, {
+      method: 'POST',
+    }),
     updatePrice: (id, price) => fetchAPI(`/items/${id}/price`, {
       method: 'PUT',
       body: JSON.stringify({ price }),

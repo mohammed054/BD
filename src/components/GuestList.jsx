@@ -104,7 +104,7 @@ const handleGuestClick = async (guest) => {
                   {guest.name}
                   {guest.name === userName && <span className="guest-badge">You</span>}
                 </div>
-                <div className="guest-total">
+                <div className="guest-total" title="Split equally among all guests">
                   ${(guestTotals[guest.id] || 0).toFixed(2)}
                 </div>
               </div>
@@ -154,9 +154,9 @@ const handleGuestClick = async (guest) => {
                 ))}
 
                 <div className="guest-total-summary">
-                  <div className="total-label">Total Claimed</div>
+                  <div className="total-label">Split Total</div>
                   <div className="total-amount">
-                    ${guestItems.reduce((sum, item) => sum + parseFloat(item.price || 0), 0).toFixed(2)}
+                    ${((guestTotals[selectedGuest.id] || 0)).toFixed(2)}
                   </div>
                 </div>
               </div>
