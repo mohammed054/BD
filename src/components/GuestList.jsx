@@ -26,7 +26,7 @@ export default function GuestList() {
       for (const guest of PREDEFINED_GUESTS) {
         try {
           const totalData = await api.guests.getTotal(guest.name);
-          totals[guest.id] = totalData.total;
+          totals[guest.id] = totalData?.total || 0;
         } catch {
           totals[guest.id] = 0;
         }
@@ -45,7 +45,7 @@ export default function GuestList() {
     return emojis[Math.abs(hash) % emojis.length];
   };
 
-  const handleGuestClick = async (guest) => {
+const handleGuestClick = async (guest) => {
     setLoadingItems(true);
     setSelectedGuest(guest);
     setGuestItems([]);
@@ -56,21 +56,22 @@ export default function GuestList() {
         api.items.getUncategorized()
       ]);
 
-      const claimedItems = itemsData.filter(item => item.claimed && item.claimed_by === guest.name);
+      const claimedItems = (itemsData || []).filter(item => item.claimed && item.claimed_by === guest.name);
       
-      const categoryItemsPromises = categoriesData.map(cat => 
-        api.items.getByCategory(cat.id)
+      const categoryItemsPromises = (categoriesData || []).map(cat => 
+        api.items.getByCategory(cat.id).catch(() => [])
       );
       const allCategoryItems = await Promise.all(categoryItemsPromises);
       
       allCategoryItems.forEach(catItems => {
-        const claimedCatItems = catItems.filter(item => item.claimed && item.claimed_by === guest.name);
+        const claimedCatItems = (catItems || []).filter(item => item.claimed && item.claimed_by === guest.name);
         claimedItems.push(...claimedCatItems);
       });
 
       setGuestItems(claimedItems);
     } catch (error) {
       console.error('Failed to fetch guest items:', error);
+      setGuestItems([]);
     } finally {
       setLoadingItems(false);
     }
@@ -143,11 +144,11 @@ export default function GuestList() {
                   <div key={item.id} className="guest-item-preview">
                     <div className="item-info">
                       <span className="item-name">
-                        {item.name_en || item.name_ar}
+                        {(item.name_en || item.name_ar || 'Unknown Item')?.toString?.() || 'Unknown Item'}
                       </span>
                     </div>
                     <div className="item-price-wrapper">
-                      <span className="item-price">${item.price || 0}</span>
+                      <span className="item-price">${parseFloat(item.price || 0).toFixed(2)}</span>
                     </div>
                   </div>
                 ))}
@@ -155,7 +156,7 @@ export default function GuestList() {
                 <div className="guest-total-summary">
                   <div className="total-label">Total Claimed</div>
                   <div className="total-amount">
-                    ${guestItems.reduce((sum, item) => sum + (item.price || 0), 0).toFixed(2)}
+                    ${guestItems.reduce((sum, item) => sum + parseFloat(item.price || 0), 0).toFixed(2)}
                   </div>
                 </div>
               </div>

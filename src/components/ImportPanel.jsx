@@ -7,9 +7,31 @@ export default function ImportPanel({ isOpen, onClose }) {
   const [importData, setImportData] = useState('');
   const [importResult, setImportResult] = useState(null);
 
-  const handleImport = async () => {
+const handleImport = async () => {
     try {
+      if (!importData.trim()) {
+        setImportResult({ error: 'Please enter JSON data to import' });
+        return;
+      }
+      
       const parsed = JSON.parse(importData);
+      
+      // Validate the structure before sending
+      if (!parsed.categories && !parsed.uncategorizedItems) {
+        setImportResult({ error: 'Must include either "categories" or "uncategorizedItems"' });
+        return;
+      }
+      
+      if (parsed.categories && !Array.isArray(parsed.categories)) {
+        setImportResult({ error: '"categories" must be an array' });
+        return;
+      }
+      
+      if (parsed.uncategorizedItems && !Array.isArray(parsed.uncategorizedItems)) {
+        setImportResult({ error: '"uncategorizedItems" must be an array' });
+        return;
+      }
+      
       const result = await api.import.data(parsed);
       setImportResult(result);
     } catch (error) {

@@ -54,7 +54,7 @@ export default function Category({ category, editMode, onDelete }) {
       } else {
         await api.items.claim(item.id, true, userName);
       }
-      fetchItems();
+      await fetchItems();
     } catch (error) {
       console.error('Failed to claim item:', error);
     }
@@ -148,9 +148,9 @@ export default function Category({ category, editMode, onDelete }) {
                  className={`item ${item.claimed ? 'claimed' : ''}`}
                >
                  <div className="item-info" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
-                   <span className="item-name">
-                     {language === 'ar' ? item.name_ar : item.name_en}
-                   </span>
+<span className="item-name">
+                      {language === 'ar' ? (item.name_ar || item.name_en || 'Unknown Item') : (item.name_en || item.name_ar || 'Unknown Item')}
+                    </span>
                    {editingPrice === item.id ? (
                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                        <span>$</span>

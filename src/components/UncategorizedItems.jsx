@@ -53,7 +53,7 @@ export default function UncategorizedItems() {
       } else {
         await api.items.claim(item.id, true, userName);
       }
-      fetchItems();
+      await fetchItems();
     } catch (error) {
       console.error('Failed to claim item:', error);
     }
@@ -131,9 +131,9 @@ export default function UncategorizedItems() {
                className={`item ${item.claimed ? 'claimed' : ''}`}
              >
                <div className="item-info">
-                 <span className="item-name">
-                   {language === 'ar' ? item.name_ar : item.name_en}
-                 </span>
+<span className="item-name">
+                    {language === 'ar' ? (item.name_ar || item.name_en || 'Unknown Item') : (item.name_en || item.name_ar || 'Unknown Item')}
+                  </span>
                  {editingPrice === item.id ? (
                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                      <span>$</span>

@@ -90,7 +90,7 @@ export const api = {
     delete: (id) => fetchAPI(`/guests/${id}`, {
       method: 'DELETE',
     }),
-    getTotal: (id) => fetchAPI(`/guests/${id}/total`),
+    getTotal: (name) => fetchAPI(`/guests/${encodeURIComponent(name)}/total`),
   },
   import: {
     data: (categories) => fetchAPI('/import', {
