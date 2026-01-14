@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useUser } from '../contexts/UserContext';
 import { useCountdown } from '../hooks/useCountdown';
 import { Confetti } from './Confetti';
 
 export default function Header() {
   const { language, setLanguage, isDark, setIsDark, t } = useLanguage();
+  const { userName, logout } = useUser();
   const timeLeft = useCountdown();
   const [showConfetti, setShowConfetti] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -48,6 +50,9 @@ export default function Header() {
           <div className="controls">
             <button className="control-btn" onClick={toggleLanguage}>
               {language === 'en' ? '🇸🇦 عربي' : '🇬🇧 English'}
+            </button>
+            <button className="control-btn" onClick={logout}>
+              🚪
             </button>
             <button className="control-btn" onClick={toggleTheme}>
               {isDark ? '☀️' : '🌙'}

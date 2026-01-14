@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const UserContext = createContext();
 
@@ -7,22 +7,18 @@ export function UserProvider({ children }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
-  useEffect(() => {
-    const savedName = localStorage.getItem('bd-username');
-    if (savedName) {
-      setUserName(savedName);
-      setIsRegistered(true);
-    }
-  }, []);
-
   const register = (name) => {
     setUserName(name);
     setIsRegistered(true);
-    localStorage.setItem('bd-username', name);
+  };
+
+  const logout = () => {
+    setUserName('');
+    setIsRegistered(false);
   };
 
   return (
-    <UserContext.Provider value={{ userName, isRegistered, register, editMode, setEditMode }}>
+    <UserContext.Provider value={{ userName, isRegistered, register, logout, editMode, setEditMode }}>
       {children}
     </UserContext.Provider>
   );
