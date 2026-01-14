@@ -11,6 +11,8 @@ export default function Category({ category, editMode, onDelete }) {
   const [newItemName, setNewItemName] = useState('');
   const [newItemPrice, setNewItemPrice] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingPrice, setEditingPrice] = useState(null);
+  const [priceInput, setPriceInput] = useState('');
 
   const fetchItems = useCallback(async () => {
     try {
@@ -64,6 +66,17 @@ export default function Category({ category, editMode, onDelete }) {
       fetchItems();
     } catch (error) {
       console.error('Failed to delete item:', error);
+    }
+  };
+
+  const handleUpdatePrice = async (itemId) => {
+    try {
+      await api.items.updatePrice(itemId, parseFloat(priceInput) || 0);
+      setEditingPrice(null);
+      setPriceInput('');
+      fetchItems();
+    } catch (error) {
+      console.error('Failed to update price:', error);
     }
   };
 
@@ -130,18 +143,72 @@ export default function Category({ category, editMode, onDelete }) {
             </p>
           ) : (
             items.map((item) => (
-              <div
-                key={item.id}
-                className={`item ${item.claimed ? 'claimed' : ''}`}
-              >
-                <div className="item-info" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
-                  <span className="item-name">
-                    {language === 'ar' ? item.name_ar : item.name_en}
-                  </span>
-                  <span className="item-price">
-                    ${item.price || 0}
-                  </span>
-                </div>
+               <div
+                 key={item.id}
+                 className={`item ${item.claimed ? 'claimed' : ''}`}
+               >
+                 <div className="item-info" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
+                   <span className="item-name">
+                     {language === 'ar' ? item.name_ar : item.name_en}
+                   </span>
+                   {editingPrice === item.id ? (
+                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                       <span>$</span>
+                       <input
+                         type="number"
+                         className="item-input"
+                         style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem', minWidth: '80px' }}
+                         step="0.01"
+                         min="0"
+                         value={priceInput}
+                         onChange={(e) => setPriceInput(e.target.value)}
+                         autoFocus
+                         onKeyDown={(e) => {
+                           if (e.key === 'Enter') {
+                             handleUpdatePrice(item.id);
+                           } else if (e.key === 'Escape') {
+                             setEditingPrice(null);
+                             setPriceInput('');
+                           }
+                         }}
+                       />
+                       <button
+                         className="item-submit-btn"
+                         style={{ padding: '0.25rem 0.5rem', minWidth: '32px', minHeight: '32px' }}
+                         onClick={() => handleUpdatePrice(item.id)}
+                       >
+                         ✓
+                       </button>
+                       <button
+                         className="item-cancel-btn"
+                         style={{ padding: '0.25rem 0.5rem', minWidth: '32px', minHeight: '32px' }}
+                         onClick={() => {
+                           setEditingPrice(null);
+                           setPriceInput('');
+                         }}
+                       >
+                         ✕
+                       </button>
+                     </div>
+                   ) : (
+                     <span
+                       className="item-price"
+                       style={{
+                         cursor: parseFloat(item.price) === 0 ? 'pointer' : 'default',
+                         textDecoration: parseFloat(item.price) === 0 ? 'underline dotted' : 'none',
+                       }}
+                       onClick={() => {
+                         if (parseFloat(item.price) === 0) {
+                           setEditingPrice(item.id);
+                           setPriceInput('');
+                         }
+                       }}
+                       title={parseFloat(item.price) === 0 ? 'Click to set price' : ''}
+                     >
+                       ${item.price || 0}
+                     </span>
+                   )}
+                 </div>
                 <div className="item-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {item.claimed && (
                     <span className="claimed-by">

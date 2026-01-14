@@ -2,16 +2,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useUser } from '../contexts/UserContext';
 import { api } from '../utils/api';
-import { Sparkles } from './Confetti';
 
 export default function GuestList() {
   const { t } = useLanguage();
-  const { userName, isRegistered, register } = useUser();
+  const { userName } = useUser();
   const [editMode, setEditMode] = useState(false);
   const [guests, setGuests] = useState([]);
   const [guestTotals, setGuestTotals] = useState({});
-  const [newGuestName, setNewGuestName] = useState('');
-  const [sparklePos, setSparklePos] = useState(null);
 
   const fetchGuests = useCallback(async () => {
     try {
@@ -39,25 +36,6 @@ export default function GuestList() {
     return () => clearInterval(interval);
   }, [fetchGuests]);
 
-  const handleJoin = async (e) => {
-    e.preventDefault();
-    if (!newGuestName.trim()) return;
-
-    const button = e.target;
-    const rect = button.getBoundingClientRect();
-    setSparklePos({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
-
-    try {
-      await api.guests.add(newGuestName);
-      register(newGuestName);
-      setNewGuestName('');
-      fetchGuests();
-      setTimeout(() => setSparklePos(null), 1000);
-    } catch (error) {
-      console.error('Failed to add guest:', error);
-    }
-  };
-
   const handleDeleteGuest = async (guestId) => {
     try {
       await api.guests.delete(guestId);
@@ -77,38 +55,21 @@ export default function GuestList() {
   };
 
   return (
-    <>
-      {sparklePos && <Sparkles x={sparklePos.x} y={sparklePos.y} />}
-      <div className="guest-section">
-        <div className="guest-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h2 style={{ fontSize: 'var(--font-size-2xl)', margin: 0 }}>
-            🎂 {t.guests} ({guests.length})
-          </h2>
-          <button
-            className={`edit-mode-btn ${editMode ? 'active' : ''}`}
-            onClick={() => setEditMode(!editMode)}
-            style={{ padding: '0.5rem 1rem', minWidth: '48px', minHeight: '48px' }}
-          >
-            {editMode ? '✓ Done' : '✏️ Edit'}
-          </button>
-        </div>
+    <div className="guest-section">
+      <div className="guest-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h2 style={{ fontSize: 'var(--font-size-2xl)', margin: 0 }}>
+          🎂 {t.guests} ({guests.length})
+        </h2>
+        <button
+          className={`edit-mode-btn ${editMode ? 'active' : ''}`}
+          onClick={() => setEditMode(!editMode)}
+          style={{ padding: '0.5rem 1rem', minWidth: '48px', minHeight: '48px' }}
+        >
+          {editMode ? '✓ Done' : '✏️ Edit'}
+        </button>
+      </div>
 
-        {!isRegistered && (
-          <form className="guest-form" onSubmit={handleJoin}>
-            <input
-              type="text"
-              placeholder={t.joinGuest}
-              value={newGuestName}
-              onChange={(e) => setNewGuestName(e.target.value)}
-              className="guest-input"
-            />
-            <button type="submit" className="guest-btn">
-              🚀 {t.joinButton}
-            </button>
-          </form>
-        )}
-
-        <div className="guest-list">
+      <div className="guest-list">
           {guests.map((guest) => (
             <div key={guest.id} className="guest-item">
               <div className="guest-avatar" style={{ fontSize: '2.5rem', marginRight: '1rem' }}>
@@ -145,6 +106,6 @@ export default function GuestList() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -69,6 +69,10 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+    updatePrice: (id, price) => fetchAPI(`/items/${id}/price`, {
+      method: 'PUT',
+      body: JSON.stringify({ price }),
+    }),
     claim: (id, claimed, claimedBy) => fetchAPI(`/items/${id}/claim`, {
       method: 'PUT',
       body: JSON.stringify({ claimed, claimed_by: claimedBy }),
