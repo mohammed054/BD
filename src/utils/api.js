@@ -92,10 +92,10 @@ export const api = {
     }),
     getTotal: (name) => fetchAPI(`/guests/${encodeURIComponent(name)}/total`),
   },
-  import: {
-    data: (categories) => fetchAPI('/import', {
+import: {
+    data: (payload) => fetchAPI('/import', {
       method: 'POST',
-      body: JSON.stringify({ categories }),
+      body: JSON.stringify(payload),
     }),
   },
 };
