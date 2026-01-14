@@ -11,23 +11,47 @@ export default function ImportPanel({ isOpen, onClose }) {
 const handleImport = async () => {
     try {
       if (!importData.trim()) {
-        setImportResult({ error: 'Please enter JSON data to import' });
+        setImportResult({ error: 'Please enter JSON data' });
         return;
       }
       
-      const parsed = JSON.parse(importData);
-      
-      // Build clean payload - only include fields that exist and have content
-      const payload = {};
-      if (parsed.categories && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
-        payload.categories = parsed.categories;
+      let parsed;
+      try {
+        parsed = JSON.parse(importData);
+      } catch (e) {
+        setImportResult({ error: 'Invalid JSON format' });
+        return;
       }
-      if (parsed.uncategorizedItems && Array.isArray(parsed.uncategorizedItems) && parsed.uncategorizedItems.length > 0) {
-        payload.uncategorizedItems = parsed.uncategorizedItems;
+      
+      // Normalize the structure - handle double nesting
+      let categories = parsed.categories;
+      let uncategorizedItems = parsed.uncategorizedItems;
+      
+      // Fix: if categories is wrapped in another categories object
+      if (categories && typeof categories === 'object' && !Array.isArray(categories)) {
+        if (categories.categories && Array.isArray(categories.categories)) {
+          categories = categories.categories;
+        }
+      }
+      
+      // Fix: if uncategorizedItems is wrapped in another object
+      if (uncategorizedItems && typeof uncategorizedItems === 'object' && !Array.isArray(uncategorizedItems)) {
+        if (uncategorizedItems.uncategorizedItems && Array.isArray(uncategorizedItems.uncategorizedItems)) {
+          uncategorizedItems = uncategorizedItems.uncategorizedItems;
+        }
+      }
+      
+      // Build clean payload
+      const payload = {};
+      if (categories && Array.isArray(categories) && categories.length > 0) {
+        payload.categories = categories;
+      }
+      if (uncategorizedItems && Array.isArray(uncategorizedItems) && uncategorizedItems.length > 0) {
+        payload.uncategorizedItems = uncategorizedItems;
       }
       
       if (Object.keys(payload).length === 0) {
-        setImportResult({ error: 'JSON must include non-empty "categories" or "uncategorizedItems"' });
+        setImportResult({ error: 'Must have non-empty categories or items' });
         return;
       }
       
