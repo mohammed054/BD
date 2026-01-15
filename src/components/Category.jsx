@@ -190,24 +190,28 @@ export default function Category({ category, editMode, onDelete }) {
                          ✕
                        </button>
                      </div>
-                   ) : (
-                     <span
-                       className="item-price"
-                       style={{
-                         cursor: parseFloat(item.price) === 0 ? 'pointer' : 'default',
-                         textDecoration: parseFloat(item.price) === 0 ? 'underline dotted' : 'none',
-                       }}
-                       onClick={() => {
-                         if (parseFloat(item.price) === 0) {
-                           setEditingPrice(item.id);
-                           setPriceInput('');
-                         }
-                       }}
-                       title={parseFloat(item.price) === 0 ? 'Click to set price' : ''}
-                     >
-                       ${item.price || 0}
-                     </span>
-                   )}
+                    ) : (
+                      <span
+                        className="item-price"
+                        data-item-id={item.id}
+                        data-price={item.price}
+                        style={{
+                          cursor: parseFloat(item.price) === 0 ? 'pointer' : 'default',
+                          textDecoration: parseFloat(item.price) === 0 ? 'underline dotted' : 'none',
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Price clicked:', item.id, 'price:', item.price);
+                          if (parseFloat(item.price) === 0) {
+                            setEditingPrice(item.id);
+                            setPriceInput('');
+                          }
+                        }}
+                        title={parseFloat(item.price) === 0 ? 'Click to set price' : ''}
+                      >
+                        ${item.price || 0}
+                      </span>
+                    )}
                  </div>
 <div className="item-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                    {item.claimed && (
