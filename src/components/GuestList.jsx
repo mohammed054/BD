@@ -154,9 +154,9 @@ const handleGuestClick = async (guest) => {
                 ))}
 
                  <div className="guest-total-summary">
-                   <div className="total-label">Claimed Total</div>
+                   <div className="total-label">Split Share</div>
                    <div className="total-amount">
-                     ${guestItems.reduce((sum, item) => sum + (item.price || 0), 0).toFixed(2)}
+                     ${((guestTotals[selectedGuest.id] || 0)).toFixed(2)}
                    </div>
                  </div>
               </div>
