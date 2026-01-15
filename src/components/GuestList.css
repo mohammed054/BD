@@ -573,63 +573,64 @@
 
 @media (max-width: 480px) {
   .split-display {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs);
     flex-direction: column;
     gap: var(--spacing-xs);
   }
 
   .split-label {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
   }
 
   .split-amount {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
   }
 
   .guest-section {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-width: 2px;
   }
 
   .guest-header {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
     flex-wrap: wrap;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
   }
 
   .guest-header h2 {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-xl);
   }
 
   .guest-header h2::before {
-    left: -25px;
+    left: -20px;
     top: -3px;
-  }
-
-  .current-user {
-    padding: var(--spacing-xs) var(--spacing-sm);
-  }
-
-  .user-emoji {
     font-size: 1.2rem;
   }
 
+  .current-user {
+    padding: var(--spacing-xs) var(--spacing-xs);
+  }
+
+  .user-emoji {
+    font-size: 1rem;
+  }
+
   .user-name {
-    font-size: var(--font-size-sm);
+    font-size: 0.75rem;
   }
 
   .guest-item {
-    padding: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 
   .guest-avatar {
-    font-size: 2rem;
-    min-width: 50px;
-    height: 50px;
+    font-size: 1.5rem;
+    min-width: 36px;
+    height: 36px;
   }
 
   .guest-name {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
   }
 
   .guest-total {
@@ -637,49 +638,50 @@
   }
 
   .guest-arrow {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-base);
   }
 
   .guest-modal-overlay {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs);
   }
 
   .guest-modal {
     max-width: 100%;
     width: 100%;
     max-height: 90vh;
-    border-width: 3px;
+    border-width: 2px;
     margin: 0;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
   }
 
   .guest-modal-header {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
   }
 
   .modal-emoji {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .modal-title h3 {
-    font-size: var(--font-size-lg);
-  }
-
-  .close-modal-btn {
-    width: 36px;
-    height: 36px;
     font-size: var(--font-size-base);
   }
 
+  .close-modal-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+
   .guest-items-list {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
   }
 
   .guest-item-preview {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
     flex-direction: column;
     align-items: stretch;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
   }
 
   .item-info {
@@ -688,7 +690,7 @@
   }
 
   .item-name {
-    font-size: var(--font-size-sm);
+    font-size: 0.8rem;
   }
 
   .item-price-wrapper {
@@ -697,21 +699,21 @@
   }
 
   .item-price {
-    font-size: var(--font-size-base);
-    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-xs);
     min-width: auto;
   }
 
   .guest-total-summary {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 
   .total-label {
-    font-size: var(--font-size-sm);
+    font-size: 0.75rem;
   }
 
   .total-amount {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-base);
   }
 }
 

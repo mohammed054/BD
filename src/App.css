@@ -689,7 +689,22 @@ html {
 
 @media (max-width: 480px) {
   .category-header {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .category-title {
+    font-size: var(--font-size-base);
+    gap: var(--spacing-xs);
+  }
+
+  .category-icon {
+    font-size: 1.5rem;
+  }
+
+  .item-count {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.5rem;
   }
 }
 
@@ -757,9 +772,10 @@ html {
 
 @media (max-width: 480px) {
   .action-btn {
-    min-width: 40px;
-    min-height: 40px;
-    font-size: var(--font-size-base);
+    min-width: 32px;
+    min-height: 32px;
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs);
   }
 }
 
@@ -835,8 +851,9 @@ html {
 @media (max-width: 480px) {
   .add-item-form,
   .add-category-form {
-    padding: var(--spacing-md);
-    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
   }
 }
 
@@ -859,8 +876,9 @@ html {
 @media (max-width: 480px) {
   .category-input,
   .item-input {
-    min-height: 48px;
-    padding: var(--spacing-sm);
+    min-height: 36px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
   }
 }
 
@@ -925,6 +943,24 @@ html {
   box-shadow: 0 4px 12px rgba(255, 138, 92, 0.4);
 }
 
+@media (max-width: 480px) {
+  .category-submit-btn,
+  .item-submit-btn {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-xs);
+  }
+
+  .category-cancel-btn,
+  .item-cancel-btn {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-xs);
+  }
+}
+
 .items-list {
   display: flex;
   flex-direction: column;
@@ -935,8 +971,8 @@ html {
 
 @media (max-width: 480px) {
   .items-list {
-    padding: var(--spacing-md);
-    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
   }
 }
 
@@ -979,7 +1015,8 @@ html {
 
 @media (max-width: 480px) {
   .item {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
   }
 }
 
@@ -1042,10 +1079,25 @@ html {
   letter-spacing: 0.5px;
   background: linear-gradient(135deg, rgba(0, 230, 118, 0.25) 0%, rgba(0, 230, 118, 0.15) 100%);
   border: 3px solid var(--accent-success);
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(0, 230, 118, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   animation: claimedPulse 2s ease-in-out infinite;
+}
+
+@media (max-width: 480px) {
+  .item-name {
+    font-size: var(--font-size-sm);
+  }
+
+  .item-price {
+    font-size: var(--font-size-base);
+  }
+
+  .claimed-by {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
 }
 
 @keyframes claimedPulse {
@@ -1100,9 +1152,10 @@ html {
 
 @media (max-width: 480px) {
   .claim-btn {
-    padding: var(--spacing-sm) var(--spacing-md);
-    min-height: 44px;
-    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-height: 32px;
+    font-size: 0.7rem;
+    min-width: 60px;
   }
 }
 
@@ -1158,6 +1211,15 @@ html {
   border-color: var(--accent-orange);
   transform: scale(1.2);
   box-shadow: 0 6px 20px rgba(255, 138, 92, 0.5);
+}
+
+@media (max-width: 480px) {
+  .delete-item-btn {
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 0.8rem;
+    padding: var(--spacing-xs);
+  }
 }
 
 .empty-message {
