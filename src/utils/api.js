@@ -27,8 +27,10 @@ export function useConnectionStatus() {
 }
 
 export async function fetchAPI(endpoint, options = {}) {
+  const url = `${API_BASE}${endpoint}`;
+  console.log('API call:', options.method || 'GET', url);
   try {
-    const response = await fetch(`${API_BASE}${endpoint}`, {
+    const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
         ...options.headers,
@@ -37,12 +39,16 @@ export async function fetchAPI(endpoint, options = {}) {
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API Error:', response.status, errorText);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    console.log('API response:', data);
+    return data;
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('API Error:', error.message, url);
     throw error;
   }
 }
