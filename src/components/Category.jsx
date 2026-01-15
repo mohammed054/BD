@@ -63,6 +63,19 @@ export default function Category({ category, editMode, onDelete }) {
     }
   };
 
+  const handleClaimAll = async () => {
+    try {
+      for (const item of items) {
+        if (!item.claimed || item.claimed_by !== userName) {
+          await api.items.claim(item.id, true, userName);
+        }
+      }
+      await fetchItems();
+    } catch (error) {
+      console.error('Failed to claim all items:', error);
+    }
+  };
+
   const handleDeleteItem = async (itemId) => {
     try {
       await api.items.delete(itemId);
@@ -111,6 +124,9 @@ export default function Category({ category, editMode, onDelete }) {
               </button>
               <button className="action-btn delete-btn" onClick={() => onDelete(category.id)}>
                 🗑️
+              </button>
+              <button className="action-btn claim-all-btn" onClick={handleClaimAll}>
+                ✓ All
               </button>
             </>
           )}

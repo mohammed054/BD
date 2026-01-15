@@ -776,13 +776,24 @@ html {
   box-shadow: 0 4px 12px rgba(0, 230, 118, 0.4);
 }
 
-.delete-btn:hover {
-  background: linear-gradient(145deg, var(--accent-orange) 0%, var(--accent-primary) 100%);
-  border-color: var(--accent-orange);
-  box-shadow: 0 4px 12px rgba(255, 138, 92, 0.4);
-}
+  .delete-btn:hover {
+    background: linear-gradient(145deg, var(--accent-orange) 0%, var(--accent-primary) 100%);
+    border-color: var(--accent-orange);
+    box-shadow: 0 4px 12px rgba(255, 138, 92, 0.4);
+  }
 
-.expand-btn {
+  .action-btn.claim-all-btn {
+    background: linear-gradient(145deg, var(--accent-success) 0%, #00b894 100%);
+    border-color: var(--accent-success);
+    min-width: 70px;
+    padding: 0 0.5rem 0.75rem;
+  }
+
+  .action-btn.claim-all-btn:hover {
+    box-shadow: 0 6px 20px rgba(0, 230, 118, 0.6);
+  }
+
+  .expand-btn {
   background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
   color: var(--text-primary);
   border: 3px solid var(--border-color);
