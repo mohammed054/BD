@@ -15,15 +15,21 @@ export default function Category({ category, editMode, onDelete }) {
   const [priceInput, setPriceInput] = useState('');
 
   const fetchItems = useCallback(async () => {
+    const timestamp = Date.now();
+    const itemId = Math.random().toString(36).substring(2, 8);
+    console.log(`[FETCH-${itemId}] Starting fetch for category ${category.id} at ${new Date().toISOString()}`);
     try {
       const data = await api.items.getByCategory(category.id);
+      console.log(`[FETCH-${itemId}] Received ${data.length} items for category ${category.id}`);
       setItems(data);
+      console.log(`[FETCH-${itemId}] Items set, should trigger re-render`);
     } catch (error) {
-      console.error('Failed to fetch items:', error);
+      console.error(`[FETCH-${itemId}] Failed to fetch items:`, error);
     }
   }, [category.id]);
 
   useEffect(() => {
+    console.log(`[USEFFECT] Category ${category.id} changed, calling fetchItems`);
     fetchItems();
   }, [fetchItems]);
 
@@ -48,15 +54,23 @@ export default function Category({ category, editMode, onDelete }) {
   };
 
   const handleClaim = async (item) => {
+    const timestamp = Date.now();
+    const itemId = Math.random().toString(36).substring(2, 8);
+    console.log(`[CLAIM-${itemId}] START: Item ${item.id}, name: ${item.name_en}, currently claimed: ${item.claimed} by ${item.claimed_by}`);
+    
     try {
-      if (item.claimed && item.claimed_by === userName) {
-        await api.items.claim(item.id, false, null);
-      } else {
-        await api.items.claim(item.id, true, userName);
-      }
+      const newClaimed = !(item.claimed && item.claimed_by === userName);
+      console.log(`[CLAIM-${itemId}] Calculating newClaimed: ${newClaimed}, current: claimed=${item.claimed}, by=${item.claimed_by}, user=${userName}`);
+      
+      console.log(`[CLAIM-${itemId}] Sending claim request...`);
+      const result = await api.items.claim(item.id, newClaimed, newClaimed ? userName : null);
+      console.log(`[CLAIM-${itemId}] Claim API response:`, result);
+      
+      console.log(`[CLAIM-${itemId}] Fetching updated items...`);
       await fetchItems();
+      console.log(`[CLAIM-${itemId}] Fetch completed. DONE at ${new Date().toISOString()}`);
     } catch (error) {
-      console.error('Failed to claim item:', error);
+      console.error(`[CLAIM-${itemId}] Failed to claim item:`, error);
     }
   };
 
