@@ -48,13 +48,16 @@ export default function Category({ category, editMode, onDelete }) {
   };
 
   const handleClaim = async (item) => {
+    console.log('Claim clicked:', item.id, item.name_en, 'claimed:', item.claimed, 'by:', item.claimed_by);
     try {
       if (item.claimed && item.claimed_by === userName) {
         await api.items.claim(item.id, false, null);
       } else {
         await api.items.claim(item.id, true, userName);
       }
+      console.log('Claim API call completed, fetching items...');
       await fetchItems();
+      console.log('Items refreshed');
     } catch (error) {
       console.error('Failed to claim item:', error);
     }
