@@ -90,7 +90,7 @@ export default function Category({ category, editMode, onDelete }) {
   };
 
   const categoryName = language === 'ar' ? category.name_ar : category.name_en;
-  const isFullyClaimed = items.length > 0 && items.every(item => item.claimed);
+  const isFullyClaimed = items.length > 0 && items.every(item => item.claimed && item.claimed_by);
 
   return (
     <div className={`category ${isFullyClaimed ? 'fully-claimed' : ''}`}>
@@ -145,7 +145,7 @@ export default function Category({ category, editMode, onDelete }) {
       )}
 
       {expanded && (
-        <div className="items-list">
+        <div className={`items-list ${isFullyClaimed ? 'fully-claimed' : ''}`}>
           {items.length === 0 ? (
             <p className="empty-message">
               <div style={{ marginBottom: '1rem', fontSize: '3rem' }}>💝</div>

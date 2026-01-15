@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { api } from '../utils/api';
 import './GuestList.css';
@@ -15,28 +15,11 @@ const PREDEFINED_GUESTS = [
 
 export default function GuestList() {
   const { userName, logout } = useUser();
-  const [guestTotals, setGuestTotals] = useState({});
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [guestItems, setGuestItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
   const [allItems, setAllItems] = useState([]);
-  const [showSplit, setShowSplit] = useState(false);
-
-  useEffect(() => {
-    const fetchGuestTotals = async () => {
-      const totals = {};
-      for (const guest of PREDEFINED_GUESTS) {
-        try {
-          const totalData = await api.guests.getTotal(guest.name);
-          totals[guest.id] = totalData?.total || 0;
-        } catch {
-          totals[guest.id] = 0;
-        }
-      }
-      setGuestTotals(totals);
-    };
-    fetchGuestTotals();
-  }, []);
+  const [splitTotal, setSplitTotal] = useState(0);
 
   useEffect(() => {
     const fetchAllItems = async () => {
@@ -58,32 +41,14 @@ export default function GuestList() {
         });
 
         setAllItems(allItemsList);
+        const total = allItemsList.reduce((sum, item) => sum + (item.price || 0), 0);
+        setSplitTotal(total / 7);
       } catch (error) {
         console.error('Failed to fetch all items:', error);
       }
     };
     fetchAllItems();
   }, []);
-
-  const splitCalculation = useMemo(() => {
-    const totalAmount = allItems.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
-    const activeGuests = PREDEFINED_GUESTS.filter(guest =>
-      guestTotals[guest.id] > 0 || guest.name === userName
-    );
-    const splitAmount = activeGuests.length > 0 ? totalAmount / activeGuests.length : 0;
-
-    return {
-      totalAmount,
-      activeGuests,
-      splitAmount,
-      guestShares: PREDEFINED_GUESTS.map(guest => ({
-        ...guest,
-        share: splitAmount,
-        personalTotal: guestTotals[guest.id] || 0,
-        difference: (guestTotals[guest.id] || 0) - splitAmount
-      }))
-    };
-  }, [allItems, guestTotals, userName]);
 
   const getAvatarEmoji = (name) => {
     const emojis = ['🎨', '🎭', '🎪', '🎢', '🎡', '🎠', '🎯', '🎱', '🎳', '🎮', '🎲', '🎰', '🎸', '🎹', '🎺', '🎻', '🥁', '🎤', '🎧'];
@@ -94,7 +59,7 @@ export default function GuestList() {
     return emojis[Math.abs(hash) % emojis.length];
   };
 
-const handleGuestClick = async (guest) => {
+  const handleGuestClick = async (guest) => {
     setLoadingItems(true);
     setSelectedGuest(guest);
     setGuestItems([]);
@@ -153,8 +118,8 @@ const handleGuestClick = async (guest) => {
                   {guest.name}
                   {guest.name === userName && <span className="guest-badge">You</span>}
                 </div>
-                <div className="guest-total" title="Split equally among all guests">
-                  ${(guestTotals[guest.id] || 0).toFixed(2)}
+                <div className="guest-total" title="Split share">
+                  ${splitTotal.toFixed(2)}
                 </div>
               </div>
 
@@ -162,59 +127,6 @@ const handleGuestClick = async (guest) => {
             </div>
           ))}
         </div>
-
-        <button
-          className="split-toggle-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowSplit(!showSplit);
-          }}
-        >
-          {showSplit ? '🙈 Hide Split' : '💰 Show Split'}
-        </button>
-
-        {showSplit && (
-          <div className="split-details">
-            <div className="split-summary">
-              <div className="split-row">
-                <span>Total Items Cost:</span>
-                <span className="split-value">${splitCalculation.totalAmount.toFixed(2)}</span>
-              </div>
-              <div className="split-row">
-                <span>Active Guests:</span>
-                <span className="split-value">{splitCalculation.activeGuests.length}</span>
-              </div>
-              <div className="split-row highlight">
-                <span>Split per Guest:</span>
-                <span className="split-value">${splitCalculation.splitAmount.toFixed(2)}</span>
-              </div>
-            </div>
-
-            <div className="split-guests">
-              {splitCalculation.guestShares.map(guest => (
-                <div
-                  key={guest.id}
-                  className={`split-guest-item ${guest.name === userName ? 'current-user-item' : ''}`}
-                >
-                  <div className="split-guest-info">
-                    <span className="split-guest-emoji">{getAvatarEmoji(guest.name)}</span>
-                    <span className="split-guest-name">{guest.name}</span>
-                  </div>
-                  <div className="split-amounts">
-                    <div className="split-personal">
-                      Personal: ${guest.personalTotal.toFixed(2)}
-                    </div>
-                    <div className={`split-share ${guest.difference >= 0 ? 'owes' : 'gets'}`}>
-                      {guest.difference >= 0
-                        ? `Owes: $${guest.difference.toFixed(2)}`
-                        : `Gets back: $${Math.abs(guest.difference).toFixed(2)}`}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {selectedGuest && (
@@ -256,9 +168,9 @@ const handleGuestClick = async (guest) => {
                 ))}
 
                 <div className="guest-total-summary">
-                  <div className="total-label">Split Total</div>
+                  <div className="total-label">Claimed Total</div>
                   <div className="total-amount">
-                    ${((guestTotals[selectedGuest.id] || 0)).toFixed(2)}
+                    ${guestItems.reduce((sum, item) => sum + (item.price || 0), 0).toFixed(2)}
                   </div>
                 </div>
               </div>
