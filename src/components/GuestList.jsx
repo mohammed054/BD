@@ -15,39 +15,25 @@ const PREDEFINED_GUESTS = [
 
 export default function GuestList() {
   const { userName, logout } = useUser();
+  const [guestTotals, setGuestTotals] = useState({});
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [guestItems, setGuestItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
-  const [allItems, setAllItems] = useState([]);
-  const [splitTotal, setSplitTotal] = useState(0);
 
   useEffect(() => {
-    const fetchAllItems = async () => {
-      try {
-        const [categoriesData, itemsData] = await Promise.all([
-          api.categories.getAll(),
-          api.items.getUncategorized()
-        ]);
-
-        let allItemsList = [...(itemsData || [])];
-
-        const categoryItemsPromises = (categoriesData || []).map(cat =>
-          api.items.getByCategory(cat.id).catch(() => [])
-        );
-        const allCategoryItems = await Promise.all(categoryItemsPromises);
-
-        allCategoryItems.forEach(catItems => {
-          allItemsList.push(...catItems);
-        });
-
-        setAllItems(allItemsList);
-        const total = allItemsList.reduce((sum, item) => sum + (item.price || 0), 0);
-        setSplitTotal(total / 7);
-      } catch (error) {
-        console.error('Failed to fetch all items:', error);
+    const fetchGuestTotals = async () => {
+      const totals = {};
+      for (const guest of PREDEFINED_GUESTS) {
+        try {
+          const totalData = await api.guests.getTotal(guest.name);
+          totals[guest.id] = totalData?.total || 0;
+        } catch {
+          totals[guest.id] = 0;
+        }
       }
+      setGuestTotals(totals);
     };
-    fetchAllItems();
+    fetchGuestTotals();
   }, []);
 
   const getAvatarEmoji = (name) => {
@@ -59,7 +45,7 @@ export default function GuestList() {
     return emojis[Math.abs(hash) % emojis.length];
   };
 
-  const handleGuestClick = async (guest) => {
+const handleGuestClick = async (guest) => {
     setLoadingItems(true);
     setSelectedGuest(guest);
     setGuestItems([]);
@@ -118,8 +104,8 @@ export default function GuestList() {
                   {guest.name}
                   {guest.name === userName && <span className="guest-badge">You</span>}
                 </div>
-                <div className="guest-total" title="Split share">
-                  ${splitTotal.toFixed(2)}
+                <div className="guest-total" title="Split equally among all guests">
+                  ${(guestTotals[guest.id] || 0).toFixed(2)}
                 </div>
               </div>
 
@@ -168,9 +154,9 @@ export default function GuestList() {
                 ))}
 
                 <div className="guest-total-summary">
-                  <div className="total-label">Claimed Total</div>
+                  <div className="total-label">Split Total</div>
                   <div className="total-amount">
-                    ${guestItems.reduce((sum, item) => sum + (item.price || 0), 0).toFixed(2)}
+                    ${((guestTotals[selectedGuest.id] || 0)).toFixed(2)}
                   </div>
                 </div>
               </div>

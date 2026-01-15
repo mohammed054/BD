@@ -656,8 +656,6 @@ html {
 
 .category.fully-claimed {
   position: relative;
-  border-color: var(--accent-success) !important;
-  background: linear-gradient(145deg, rgba(0, 230, 118, 0.15) 0%, rgba(107, 203, 119, 0.1) 100%) !important;
 }
 
 .category.fully-claimed::after {
@@ -667,48 +665,14 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 230, 118, 0.1);
+  background: rgba(107, 203, 119, 0.3);
   pointer-events: none;
   z-index: 1;
-  border-radius: var(--radius-lg);
 }
 
 .category.fully-claimed > * {
   position: relative;
   z-index: 2;
-}
-
-.category.fully-claimed .category-header {
-  background: linear-gradient(90deg, rgba(0, 230, 118, 0.2) 0%, rgba(107, 203, 119, 0.15) 100%) !important;
-  border-bottom-color: var(--accent-success) !important;
-}
-
-.category.fully-claimed .category-title {
-  color: var(--accent-success);
-}
-
-.category.fully-claimed .item-count {
-  background: linear-gradient(135deg, var(--accent-success) 0%, #00b894 100%) !important;
-  box-shadow: 0 2px 12px rgba(0, 230, 118, 0.6) !important;
-}
-
-.category.fully-claimed .expand-btn {
-  background: linear-gradient(145deg, var(--accent-success) 0%, #00b894 100%) !important;
-  border-color: var(--accent-success) !important;
-  color: var(--bg-primary);
-}
-
-.category.fully-claimed .expand-btn.expanded {
-  transform: rotate(180deg) scale(1.1);
-}
-
-.items-list.fully-claimed .item {
-  border-color: var(--accent-success) !important;
-  background: linear-gradient(145deg, rgba(0, 230, 118, 0.1) 0%, rgba(107, 203, 119, 0.05) 100%) !important;
-}
-
-.items-list.fully-claimed .item.claimed {
-  background: linear-gradient(145deg, rgba(0, 230, 118, 0.2) 0%, rgba(107, 203, 119, 0.15) 100%) !important;
 }
 
 .category-header {

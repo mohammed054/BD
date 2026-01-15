@@ -7,9 +7,8 @@ export default function ImportPanel({ isOpen, onClose }) {
   const [importData, setImportData] = useState('');
   const [importResult, setImportResult] = useState(null);
   const [showFormat, setShowFormat] = useState(false);
-  const [clearFirst, setClearFirst] = useState(false);
 
-  const handleImport = async () => {
+const handleImport = async () => {
     try {
       if (!importData.trim()) {
         setImportResult({ error: 'Please enter JSON data' });
@@ -52,9 +51,6 @@ export default function ImportPanel({ isOpen, onClose }) {
         payload.uncategorizedItems = uncategorizedItems;
         console.log('Sending uncategorizedItems:', uncategorizedItems.length);
       }
-      if (clearFirst) {
-        payload.clearFirst = true;
-      }
       
       console.log('Final payload:', JSON.stringify(payload).substring(0, 200));
       
@@ -66,7 +62,6 @@ export default function ImportPanel({ isOpen, onClose }) {
       const result = await api.import.data(payload);
       setImportResult(result);
       setImportData('');
-      setClearFirst(false);
     } catch (error) {
       setImportResult({ error: error.message });
     }
@@ -168,28 +163,6 @@ Uncategorized Items (optional):
             📥 Copy Format
           </button>
         </div>
-
-        <label style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: 'var(--spacing-sm)',
-          marginBottom: 'var(--spacing-md)',
-          padding: 'var(--spacing-md)',
-          background: 'rgba(255, 107, 157, 0.1)',
-          border: '2px solid var(--accent-primary)',
-          borderRadius: 'var(--radius-md)',
-          cursor: 'pointer'
-        }}>
-          <input
-            type="checkbox"
-            checked={clearFirst}
-            onChange={(e) => setClearFirst(e.target.checked)}
-            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
-          />
-          <span style={{ color: 'var(--accent-primary)', fontWeight: 'bold' }}>
-            🗑️ Clear existing data first (recommended)
-          </span>
-        </label>
 
         {showFormat && (
           <div style={{ 

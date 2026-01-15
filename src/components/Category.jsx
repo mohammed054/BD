@@ -48,17 +48,13 @@ export default function Category({ category, editMode, onDelete }) {
   };
 
   const handleClaim = async (item) => {
-    console.log('Claim clicked:', item.id, item.name_en, 'claimed:', item.claimed, 'by:', item.claimed_by);
     try {
-      const newClaimed = !(item.claimed && item.claimed_by === userName);
-      console.log('Sending claim request:', { claimed: newClaimed, claimed_by: newClaimed ? userName : null });
-      
-      const result = await api.items.claim(item.id, newClaimed, newClaimed ? userName : null);
-      console.log('Claim result:', result);
-      
-      console.log('Fetching updated items...');
+      if (item.claimed && item.claimed_by === userName) {
+        await api.items.claim(item.id, false, null);
+      } else {
+        await api.items.claim(item.id, true, userName);
+      }
       await fetchItems();
-      console.log('Items refreshed');
     } catch (error) {
       console.error('Failed to claim item:', error);
     }
@@ -94,7 +90,7 @@ export default function Category({ category, editMode, onDelete }) {
   };
 
   const categoryName = language === 'ar' ? category.name_ar : category.name_en;
-  const isFullyClaimed = items.length > 0 && items.every(item => item.claimed && item.claimed_by);
+  const isFullyClaimed = items.length > 0 && items.every(item => item.claimed);
 
   return (
     <div className={`category ${isFullyClaimed ? 'fully-claimed' : ''}`}>
@@ -149,7 +145,7 @@ export default function Category({ category, editMode, onDelete }) {
       )}
 
       {expanded && (
-        <div className={`items-list ${isFullyClaimed ? 'fully-claimed' : ''}`}>
+        <div className="items-list">
           {items.length === 0 ? (
             <p className="empty-message">
               <div style={{ marginBottom: '1rem', fontSize: '3rem' }}>💝</div>
@@ -204,28 +200,24 @@ export default function Category({ category, editMode, onDelete }) {
                          ✕
                        </button>
                      </div>
-                    ) : (
-                      <span
-                        className="item-price"
-                        data-item-id={item.id}
-                        data-price={item.price}
-                        style={{
-                          cursor: parseFloat(item.price) === 0 ? 'pointer' : 'default',
-                          textDecoration: parseFloat(item.price) === 0 ? 'underline dotted' : 'none',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Price clicked:', item.id, 'price:', item.price);
-                          if (parseFloat(item.price) === 0) {
-                            setEditingPrice(item.id);
-                            setPriceInput('');
-                          }
-                        }}
-                        title={parseFloat(item.price) === 0 ? 'Click to set price' : ''}
-                      >
-                        ${item.price || 0}
-                      </span>
-                    )}
+                   ) : (
+                     <span
+                       className="item-price"
+                       style={{
+                         cursor: parseFloat(item.price) === 0 ? 'pointer' : 'default',
+                         textDecoration: parseFloat(item.price) === 0 ? 'underline dotted' : 'none',
+                       }}
+                       onClick={() => {
+                         if (parseFloat(item.price) === 0) {
+                           setEditingPrice(item.id);
+                           setPriceInput('');
+                         }
+                       }}
+                       title={parseFloat(item.price) === 0 ? 'Click to set price' : ''}
+                     >
+                       ${item.price || 0}
+                     </span>
+                   )}
                  </div>
 <div className="item-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                    {item.claimed && (
