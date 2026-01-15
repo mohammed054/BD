@@ -69,6 +69,15 @@ export default function Category({ category, editMode, onDelete }) {
     }
   };
 
+  const handleDuplicateItem = async (itemId) => {
+    try {
+      await api.items.duplicate(itemId);
+      fetchItems();
+    } catch (error) {
+      console.error('Failed to duplicate item:', error);
+    }
+  };
+
   const handleUpdatePrice = async (itemId) => {
     try {
       await api.items.updatePrice(itemId, parseFloat(priceInput) || 0);
@@ -81,9 +90,10 @@ export default function Category({ category, editMode, onDelete }) {
   };
 
   const categoryName = language === 'ar' ? category.name_ar : category.name_en;
+  const isFullyClaimed = items.length > 0 && items.every(item => item.claimed);
 
   return (
-    <div className="category">
+    <div className={`category ${isFullyClaimed ? 'fully-claimed' : ''}`}>
       <div className="category-header" onClick={() => setExpanded(!expanded)}>
         <div className="category-title">
           <span className="category-icon">{category.icon || '📦'}</span>
@@ -228,15 +238,25 @@ export default function Category({ category, editMode, onDelete }) {
                     >
                       {item.claimed ? (item.claimed_by === userName ? '🔄 Unclaim' : `🔒`) : '🤝 Claim'}
                     </button>
-                   {editMode && (
-                     <button
-                       className="delete-item-btn"
-                       onClick={() => handleDeleteItem(item.id)}
-                       style={{ minWidth: '40px', minHeight: '44px' }}
-                     >
-                       ✕
-                     </button>
-                   )}
+                    {editMode && (
+                      <>
+                        <button
+                          className="action-btn"
+                          onClick={() => handleDuplicateItem(item.id)}
+                          style={{ minWidth: '40px', minHeight: '44px', fontSize: '1.2rem' }}
+                          title="Duplicate item"
+                        >
+                          📋
+                        </button>
+                        <button
+                          className="delete-item-btn"
+                          onClick={() => handleDeleteItem(item.id)}
+                          style={{ minWidth: '40px', minHeight: '44px' }}
+                        >
+                          ✕
+                        </button>
+                      </>
+                    )}
                  </div>
               </div>
             ))
