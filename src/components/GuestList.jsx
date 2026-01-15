@@ -20,7 +20,6 @@ export default function GuestList() {
   const [guestItems, setGuestItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
   const [allItems, setAllItems] = useState([]);
-  const [showSplit, setShowSplit] = useState(false);
 
   useEffect(() => {
     const fetchGuestTotals = async () => {
@@ -163,58 +162,46 @@ const handleGuestClick = async (guest) => {
           ))}
         </div>
 
-        <button
-          className="split-toggle-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowSplit(!showSplit);
-          }}
-        >
-          {showSplit ? '🙈 Hide Split' : '💰 Show Split'}
-        </button>
-
-        {showSplit && (
-          <div className="split-details">
-            <div className="split-summary">
-              <div className="split-row">
-                <span>Total Items Cost:</span>
-                <span className="split-value">${splitCalculation.totalAmount.toFixed(2)}</span>
-              </div>
-              <div className="split-row">
-                <span>Active Guests:</span>
-                <span className="split-value">{splitCalculation.activeGuests.length}</span>
-              </div>
-              <div className="split-row highlight">
-                <span>Split per Guest:</span>
-                <span className="split-value">${splitCalculation.splitAmount.toFixed(2)}</span>
-              </div>
+        <div className="split-details">
+          <div className="split-summary">
+            <div className="split-row">
+              <span>Total Items Cost:</span>
+              <span className="split-value">${splitCalculation.totalAmount.toFixed(2)}</span>
             </div>
-
-            <div className="split-guests">
-              {splitCalculation.guestShares.map(guest => (
-                <div
-                  key={guest.id}
-                  className={`split-guest-item ${guest.name === userName ? 'current-user-item' : ''}`}
-                >
-                  <div className="split-guest-info">
-                    <span className="split-guest-emoji">{getAvatarEmoji(guest.name)}</span>
-                    <span className="split-guest-name">{guest.name}</span>
-                  </div>
-                  <div className="split-amounts">
-                    <div className="split-personal">
-                      Personal: ${guest.personalTotal.toFixed(2)}
-                    </div>
-                    <div className={`split-share ${guest.difference >= 0 ? 'owes' : 'gets'}`}>
-                      {guest.difference >= 0
-                        ? `Owes: $${guest.difference.toFixed(2)}`
-                        : `Gets back: $${Math.abs(guest.difference).toFixed(2)}`}
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="split-row">
+              <span>Active Guests:</span>
+              <span className="split-value">{splitCalculation.activeGuests.length}</span>
+            </div>
+            <div className="split-row highlight">
+              <span>Split per Guest:</span>
+              <span className="split-value">${splitCalculation.splitAmount.toFixed(2)}</span>
             </div>
           </div>
-        )}
+
+          <div className="split-guests">
+            {splitCalculation.guestShares.map(guest => (
+              <div
+                key={guest.id}
+                className={`split-guest-item ${guest.name === userName ? 'current-user-item' : ''}`}
+              >
+                <div className="split-guest-info">
+                  <span className="split-guest-emoji">{getAvatarEmoji(guest.name)}</span>
+                  <span className="split-guest-name">{guest.name}</span>
+                </div>
+                <div className="split-amounts">
+                  <div className="split-personal">
+                    Personal: ${guest.personalTotal.toFixed(2)}
+                  </div>
+                  <div className={`split-share ${guest.difference >= 0 ? 'owes' : 'gets'}`}>
+                    {guest.difference >= 0
+                      ? `Owes: $${guest.difference.toFixed(2)}`
+                      : `Gets back: $${Math.abs(guest.difference).toFixed(2)}`}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {selectedGuest && (
