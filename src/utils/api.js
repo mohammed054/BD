@@ -94,6 +94,11 @@ export const api = {
       method: 'DELETE',
     }),
     getTotal: (name) => fetchAPI(`/guests/${encodeURIComponent(name)}/total`),
+    getSplitTotal: () => fetchAPI('/guests/split-total'),
+    claimAll: (category_id) => fetchAPI('/guests/claim-all', {
+      method: 'POST',
+      body: JSON.stringify({ category_id })
+    }),
   },
 import: {
     data: (payload) => fetchAPI('/import', {

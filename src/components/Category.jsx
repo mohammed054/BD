@@ -65,6 +65,15 @@ export default function Category({ category, editMode, onDelete }) {
 
   const handleClaimAll = async () => {
     try {
+      await api.guests.claimAll(category.id);
+      await fetchItems();
+    } catch (error) {
+      console.error('Failed to claim all items:', error);
+    }
+  };
+
+  const handleUpdatePrice = async (itemId) => {
+    try {
       for (const item of items) {
         if (!item.claimed || item.claimed_by !== userName) {
           await api.items.claim(item.id, true, userName);
