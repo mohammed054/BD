@@ -39,6 +39,34 @@
   }
 }
 
+.split-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+  border: 3px solid var(--accent-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.split-label {
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.split-amount {
+  font-size: var(--font-size-2xl);
+  font-weight: bold;
+  color: var(--accent-success);
+  font-family: 'Courier New', monospace;
+  text-shadow: 2px 2px 0 rgba(0, 230, 118, 0.3);
+}
+
 .guest-header {
   display: flex;
   justify-content: space-between;

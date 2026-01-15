@@ -16,24 +16,37 @@ const PREDEFINED_GUESTS = [
 export default function GuestList() {
   const { userName, logout } = useUser();
   const [guestTotals, setGuestTotals] = useState({});
+  const [splitShare, setSplitShare] = useState(0);
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [guestItems, setGuestItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
 
   useEffect(() => {
-    const fetchGuestTotals = async () => {
-      const totals = {};
-      for (const guest of PREDEFINED_GUESTS) {
-        try {
-          const totalData = await api.guests.getTotal(guest.name);
-          totals[guest.id] = totalData?.total || 0;
-        } catch {
-          totals[guest.id] = 0;
-        }
+    const fetchSplitShare = async () => {
+      try {
+        const [categoriesData, itemsData] = await Promise.all([
+          api.categories.getAll(),
+          api.items.getUncategorized()
+        ]);
+
+        let allItemsList = [...(itemsData || [])];
+
+        const categoryItemsPromises = (categoriesData || []).map(cat =>
+          api.items.getByCategory(cat.id).catch(() => [])
+        );
+        const allCategoryItems = await Promise.all(categoryItemsPromises);
+
+        allCategoryItems.forEach(catItems => {
+          allItemsList.push(...catItems);
+        });
+
+        const total = allItemsList.reduce((sum, item) => sum + (item.price || 0), 0);
+        setSplitShare(total / 7);
+      } catch (error) {
+        console.error('Failed to fetch items:', error);
       }
-      setGuestTotals(totals);
     };
-    fetchGuestTotals();
+    fetchSplitShare();
   }, []);
 
   const getAvatarEmoji = (name) => {
@@ -88,6 +101,11 @@ const handleGuestClick = async (guest) => {
           </div>
         </div>
 
+        <div className="split-display">
+          <div className="split-label">Money per Guest (Split):</div>
+          <div className="split-amount">${splitShare.toFixed(2)}</div>
+        </div>
+
         <div className="guest-list">
           {PREDEFINED_GUESTS.map((guest) => (
             <div
@@ -103,9 +121,6 @@ const handleGuestClick = async (guest) => {
                 <div className="guest-name">
                   {guest.name}
                   {guest.name === userName && <span className="guest-badge">You</span>}
-                </div>
-                <div className="guest-total" title="Split equally among all guests">
-                  ${(guestTotals[guest.id] || 0).toFixed(2)}
                 </div>
               </div>
 
@@ -153,12 +168,12 @@ const handleGuestClick = async (guest) => {
                   </div>
                 ))}
 
-                 <div className="guest-total-summary">
-                   <div className="total-label">Split Share</div>
-                   <div className="total-amount">
-                     ${((guestTotals[selectedGuest.id] || 0)).toFixed(2)}
-                   </div>
-                 </div>
+                  <div className="guest-total-summary">
+                    <div className="total-label">Claimed Total</div>
+                    <div className="total-amount">
+                      ${guestItems.reduce((sum, item) => sum + (item.price || 0), 0).toFixed(2)}
+                    </div>
+                  </div>
               </div>
             )}
           </div>
