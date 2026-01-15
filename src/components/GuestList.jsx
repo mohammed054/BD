@@ -28,7 +28,7 @@ export default function GuestList() {
       for (const guest of PREDEFINED_GUESTS) {
         try {
           const totalData = await api.guests.getTotal(guest.name);
-          totals[guest.id] = totalData?.total || 0;
+          totals[guest.id] = totalData?.personalTotal || 0;
         } catch {
           totals[guest.id] = 0;
         }
@@ -153,7 +153,7 @@ const handleGuestClick = async (guest) => {
                   {guest.name}
                   {guest.name === userName && <span className="guest-badge">You</span>}
                 </div>
-                <div className="guest-total" title="Split equally among all guests">
+                <div className="guest-total" title="Personal spending on claimed items">
                   ${(guestTotals[guest.id] || 0).toFixed(2)}
                 </div>
               </div>
@@ -256,7 +256,7 @@ const handleGuestClick = async (guest) => {
                 ))}
 
                 <div className="guest-total-summary">
-                  <div className="total-label">Split Total</div>
+                  <div className="total-label">Personal Total</div>
                   <div className="total-amount">
                     ${((guestTotals[selectedGuest.id] || 0)).toFixed(2)}
                   </div>
