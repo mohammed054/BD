@@ -72,19 +72,6 @@ export default function Category({ category, editMode, onDelete }) {
     }
   };
 
-  const handleUpdatePrice = async (itemId) => {
-    try {
-      for (const item of items) {
-        if (!item.claimed || item.claimed_by !== userName) {
-          await api.items.claim(item.id, true, userName);
-        }
-      }
-      await fetchItems();
-    } catch (error) {
-      console.error('Failed to claim all items:', error);
-    }
-  };
-
   const handleDeleteItem = async (itemId) => {
     try {
       await api.items.delete(itemId);
