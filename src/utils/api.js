@@ -95,6 +95,10 @@ export const api = {
     }),
     getTotal: (name) => fetchAPI(`/guests/${encodeURIComponent(name)}/total`),
     getSplitTotal: () => fetchAPI('/guests/split-total'),
+    updateSplitInclusion: (id, included) => fetchAPI(`/guests/${id}/split-inclusion`, {
+      method: 'PUT',
+      body: JSON.stringify({ included_in_split: included }),
+    }),
     claimAll: (category_id) => fetchAPI('/guests/claim-all', {
       method: 'POST',
       body: JSON.stringify({ category_id })

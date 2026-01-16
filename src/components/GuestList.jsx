@@ -19,9 +19,15 @@ export default function GuestList() {
   const { userName, logout } = useUser();
   const [guestTotals, setGuestTotals] = useState({});
   const [splitShare, setSplitShare] = useState(0);
+  const [activeGuestCount, setActiveGuestCount] = useState(9);
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [guestItems, setGuestItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
+  const [includedGuests, setIncludedGuests] = useState(() => {
+    const initial = {};
+    PREDEFINED_GUESTS.forEach(g => initial[g.id] = true);
+    return initial;
+  });
 
   useEffect(() => {
     const fetchSplitShare = async () => {
@@ -43,13 +49,15 @@ export default function GuestList() {
         });
 
         const total = allItemsList.reduce((sum, item) => sum + (item.price || 0), 0);
-        setSplitShare(total / 9);
+        const activeCount = Object.values(includedGuests).filter(Boolean).length || 9;
+        setActiveGuestCount(activeCount);
+        setSplitShare(total / activeCount);
       } catch (error) {
         console.error('Failed to fetch items:', error);
       }
     };
     fetchSplitShare();
-  }, []);
+  }, [includedGuests]);
 
   const getAvatarEmoji = (name) => {
     const emojis = ['🎨', '🎭', '🎪', '🎢', '🎡', '🎠', '🎯', '🎱', '🎳', '🎮', '🎲', '🎰', '🎸', '🎹', '🎺', '🎻', '🥁', '🎤', '🎧'];
@@ -60,7 +68,7 @@ export default function GuestList() {
     return emojis[Math.abs(hash) % emojis.length];
   };
 
-const handleGuestClick = async (guest) => {
+  const handleGuestClick = async (guest) => {
     setLoadingItems(true);
     setSelectedGuest(guest);
     setGuestItems([]);
@@ -92,6 +100,18 @@ const handleGuestClick = async (guest) => {
     }
   };
 
+  const handleSplitToggle = async (guestId, e) => {
+    e.stopPropagation();
+    const newIncluded = !includedGuests[guestId];
+    setIncludedGuests(prev => ({ ...prev, [guestId]: newIncluded }));
+    try {
+      await api.guests.updateSplitInclusion(guestId, newIncluded);
+    } catch (error) {
+      console.error('Failed to update split inclusion:', error);
+      setIncludedGuests(prev => ({ ...prev, [guestId]: !newIncluded }));
+    }
+  };
+
   return (
     <>
       <div className="guest-section">
@@ -104,7 +124,7 @@ const handleGuestClick = async (guest) => {
         </div>
 
         <div className="split-display">
-          <div className="split-label">Money per Guest (Split):</div>
+          <div className="split-label">Money per Guest (Split among {activeGuestCount}):</div>
           <div className="split-amount">${splitShare.toFixed(2)}</div>
         </div>
 
@@ -112,7 +132,7 @@ const handleGuestClick = async (guest) => {
           {PREDEFINED_GUESTS.map((guest) => (
             <div
               key={guest.id}
-              className={`guest-item ${guest.name === userName ? 'current-user-item' : ''}`}
+              className={`guest-item ${guest.name === userName ? 'current-user-item' : ''} ${!includedGuests[guest.id] ? 'excluded-guest' : ''}`}
               onClick={() => handleGuestClick(guest)}
             >
               <div className="guest-avatar">
@@ -124,6 +144,16 @@ const handleGuestClick = async (guest) => {
                   {guest.name}
                   {guest.name === userName && <span className="guest-badge">You</span>}
                 </div>
+              </div>
+
+              <div className="guest-actions" onClick={(e) => e.stopPropagation()}>
+                <label className="split-toggle" title="Toggle inclusion in payment split">
+                  <input
+                    type="checkbox"
+                    checked={includedGuests[guest.id] ?? true}
+                    onChange={(e) => handleSplitToggle(guest.id, e)}
+                  />
+                </label>
               </div>
 
               <div className="guest-arrow">→</div>

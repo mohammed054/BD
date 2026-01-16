@@ -743,3 +743,52 @@
     font-size: var(--font-size-lg);
   }
 }
+
+.guest-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.split-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.split-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.split-toggle input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--accent-success);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.split-toggle input[type="checkbox"]:hover {
+  border-color: var(--accent-success);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+.excluded-guest {
+  opacity: 0.5;
+  filter: grayscale(50%);
+}
+
+.excluded-guest:hover {
+  border-color: var(--border-color);
+  transform: none;
+}
+
+.excluded-guest .guest-avatar {
+  filter: grayscale(100%);
+}
