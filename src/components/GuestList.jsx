@@ -11,7 +11,8 @@ const PREDEFINED_GUESTS = [
   { id: 5, name: 'احمد كنجو' },
   { id: 6, name: 'محمد عبدالحافظ' },
   { id: 7, name: 'عبدالله علي' },
-  { id: 8, name: 'خالد اهاب' }
+  { id: 8, name: 'خالد اهاب' },
+  { id: 9, name: 'اسماعيل' }
 ];
 
 export default function GuestList() {
@@ -42,7 +43,7 @@ export default function GuestList() {
         });
 
         const total = allItemsList.reduce((sum, item) => sum + (item.price || 0), 0);
-        setSplitShare(total / 8);
+        setSplitShare(total / 9);
       } catch (error) {
         console.error('Failed to fetch items:', error);
       }

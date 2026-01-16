@@ -10,7 +10,8 @@ const PREDEFINED_GUESTS = [
   { id: 5, name: 'احمد كنجو' },
   { id: 6, name: 'محمد عبدالحافظ' },
   { id: 7, name: 'عبدالله علي' },
-  { id: 8, name: 'خالد اهاب' }
+  { id: 8, name: 'خالد اهاب' },
+  { id: 9, name: 'اسماعيل' }
 ];
 
 export default function GuestSelection() {
